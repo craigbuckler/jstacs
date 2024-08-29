@@ -1,0 +1,33 @@
+{
+  "name": "jstacs",
+  "version": "0.1.0",
+  "description": "JavaScript Templating and Caching System",
+  "type": "module",
+  "main": "jstacs.js",
+  "files": [
+    "jstacs.js"
+  ],
+  "scripts": {
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">= 20.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/craigbuckler/jstacs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/craigbuckler/jstacs/issues"
+  },
+  "homepage": "https://github.com/craigbuckler/jstacs#readme",
+  "keywords": [
+    "template",
+    "template engine",
+    "cache",
+    "render",
+    "express"
+  ],
+  "author": "Craig Buckler",
+  "license": "MIT"
+}
