@@ -39,6 +39,18 @@ describe('jsTACS templateParse', () => {
       result: '<p>first name: Craig</p><p>last name: Buckler</p>'
     },
     {
+      name: 'string replacement with NaN, null, and undefined values',
+      template: '<p>first name: ${ data.nameFirst }</p><p>middle name: ${ data.nameMiddle }</p><p>last name: ${ data.nameLast }</p>',
+      data: { nameFirst: parseInt('Craig'), nameLast: null },
+      result: '<p>first name: </p><p>middle name: </p><p>last name: </p>'
+    },
+    {
+      name: 'string replacement with && expression',
+      template: '${ data.nameFirst && `<p>first name: ${ data.nameFirst }</p>` }${ data.nameLast && `<p>last name: ${ data.nameLast }</p>` }',
+      data: { nameFirst: 'Craig', nameLast: null },
+      result: '<p>first name: Craig</p>'
+    },
+    {
       name: 'string replacement with runtime evaluation',
       template: '<p>first name: ${ data.nameFirst }</p><p>last name: !{ data.nameLast }</p>',
       data: { nameFirst: 'Craig', nameLast: 'Buckler' },

@@ -72,11 +72,11 @@ export function templateParse(template = '', data) {
     str.forEach((s, i) => {
 
       ret += s;
-      if (i < value.length && value[i] !== undefined) {
+      const v = (i < value.length) ? value[i] : null;
+      if (v !== undefined && v !== null && !Number.isNaN(v)) {
 
-        const v = value[i];
         if (typeof v === 'object') ret += String( toArray(v).join('') );
-        else ret += String( v );
+        else ret += String( v ?? '' );
 
       }
 
@@ -100,7 +100,7 @@ export function templateParse(template = '', data) {
   function toArray(obj) {
 
     if (Array.isArray(obj)) return obj;
-    if (obj === null || obj === undefined) return [];
+    if (obj === null || obj === undefined || Number.isNaN(obj)) return [];
     if (obj instanceof Set) return [...obj];
     if (obj instanceof Map) return Array.from(obj, ([, value]) => value);
     return [obj];
