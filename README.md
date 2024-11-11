@@ -2,13 +2,13 @@
 
 JavaScript Templating and Caching System for Node.js.
 
-*This is an alpha product: please use at your own discretion.*
+*This is a beta product primary designed for the [Publican static site generator](https://www.npmjs.com/package/publican). Please use at your own discretion.*
 
 jsTACs uses tagged template literals for zero-dependency fast template rendering. Features:
 
-* EcmaScript module
+* ECMAScript module
 * standard JavaScript template literal `${ expression }`
-* `!{ expression }` is ignored to the initial render so it can be evaluated at runtime. It's possible to pre-build templates so only runtime data remains.
+* `!{ expression }` is ignored in the initial render so it can be evaluated at runtime. It's possible to pre-build templates so only runtime data remains.
 * include other files
 * pass global data and custom functions.
 
@@ -24,13 +24,31 @@ import { templateParse } from 'jstacs';
 output:
 <p>Hello World!</p>
 */
-const out1 = templateParse(
+const out1a = templateParse(
   '<p>Hello ${ data.name }!</p>',
   { name: 'World' }
 );
+
+
+/*
+output:
+<p>Hello World!</p>
+*/
+const out1b = templateParse(
+  '${ data.name && `<p>Hello ${ data.name }!</p>` }',
+  { name: 'World' }
+);
+
+/*
+output: blank
+*/
+const out1c = templateParse(
+  '${ data.name && `<p>Hello ${ data.name }!</p>` }',
+  { name: null }
+);
 ```
 
-`data.name` should typically hold a string, number, or another native value. However, arrays, Sets, and Maps are automatically output: there's no need for `.join('')` unless you want a specific character.
+`data` properties such as `data.name` typically hold a string, number, or another native value. `null`, `undefined`, and `NaN` return an empty string, but `true`, `false`, and `0` are rendered as text. Arrays, Sets, and Maps are automatically output: there's no need for `.join('')` unless you want a specific character between each value.
 
 ```js
 /*
@@ -84,7 +102,7 @@ const out5 = templateParse(
 );
 ```
 
-Files can be fully-qualified or relative to the project root directory. You can also set a template directory using `tacsConfig`. All includes and sub-includes will use this directory:
+Files can be fully-qualified or relative to the project root directory. You can also set a template directory in the `tacsConfig` configuration object. All includes and sub-includes use this directory:
 
 ```js
 import { tacsConfig, templateParse } from 'jstacs';
@@ -100,7 +118,7 @@ const out6 = templateParse(
 
 ## Global values
 
-Global values can be passed to a template using the `tacs` object. This can contain any values or functions.
+Global values and functions can be passed to a template using the `tacs` object.
 
 ```js
 import { tacs, templateParse } from 'jstacs';
@@ -125,7 +143,7 @@ const out7 = templateParse(
 
 ## Pre-loading templates
 
-`templateMap` is a Map object used to cache template strings loaded from files. It can be used to pre-load templates or set (or unset) virtual files so they are available when an `include()` is referenced:
+The `templateMap` Map object used to cache template strings loaded from files. It can be used to pre-load templates or set (or unset) virtual files so they are available when an `include()` is referenced:
 
 ```js
 import { templateMap, templateParse } from 'jstacs';
