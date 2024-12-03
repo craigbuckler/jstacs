@@ -85,7 +85,7 @@ output:
 <p>a, b, c</p>
 */
 const out4 = templateParse(
-  '<p>${ toArray(data.set).join(', ') }</p>',
+  '<p>${ toArray( data.set ).join(', ') }</p>',
   { set: new Set(['a', 'b', 'c']) }
 );
 ```
@@ -143,29 +143,33 @@ const out7 = templateParse(
 
 ## Pre-loading templates
 
-The `templateMap` Map object used to cache template strings loaded from files. It can be used to pre-load templates or set (or unset) virtual files so they are available when an `include()` is referenced:
+The `templateMap` Map object used to cache template strings loaded from files. It can be used to pre-load templates and set (or unset) virtual files so they are available when an `include()` is referenced:
 
 ```js
 import { templateMap, templateParse } from 'jstacs';
 
-templateMap.set('/home/user/project/template/index.html', '${ include("header.html") }');
-templateMap.set('/home/user/project/template/header.html', '<h1>${ data.title }</h1>');
+tacsConfig.dir.template = './template/';
+
+templateMap.set('index.html', '${ include("header.html") }');
+templateMap.set('_partials/header.html', '<h1>${ data.title }</h1>');
 ```
 
-Note that the full path is required even if `tacsConfig.dir.template` has been set.
+The path is relative to `tacsConfig.dir.template` or the project root if not set.
 
-Alternatively, you can load and cache individual files using `templateGet()`, but this uses `readFileSync` so it will not be as effect as other methods:
+Alternatively, you can load and cache individual files using `templateGet()`. Note this uses `readFileSync` and may not be as efficient as other methods:
 
 ```js
 import { templateGet, templateParse } from 'jstacs';
 
-templateGet('/home/user/project/template/file.html');
+tacsConfig.dir.template = './template/';
+
+templateGet('file.html');
 ```
 
 
 ## Using jsTACS as a rendering engine
 
-jsTACS can be used as an Express.js rendering engine. Ideally, templates should be pre-rendered first with `!{ expressions }` so only runtime values need be replaced:
+jsTACS can be used as an Express.js rendering engine. Ideally, templates should be pre-rendered first with `!{ expressions }` so only runtime values need be replaced.
 
 ```js
 import express from 'express';
@@ -176,12 +180,15 @@ const
   port = 8181;
 
 app.engine('html', templateEngine);
-app.set('views', './templates');
+app.set('views', './templates/');
 app.set('view engine', 'html');
 
 // render template at ./templates/index.html
 app.get('/', (req, res) => {
-  res.render('index', { runtime: 'runtime message' });
+  res.render('index', {
+    title: 'Page title',
+    runtime: 'runtime message'
+  });
 });
 
 app.listen(port, () => {
