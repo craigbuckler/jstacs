@@ -4,7 +4,7 @@ A simple templating system using tagged template literals
 By Craig Buckler
 https://github.com/craigbuckler/jstacs
 */
-import { join, dirname } from 'node:path';
+import { join, dirname, basename } from 'node:path';
 import { readFileSync } from 'node:fs';
 
 // template configuration
@@ -31,7 +31,7 @@ export function templateGet(file) {
   if (content === undefined) {
 
     // get and cache file content
-    content = readFileSync(file, { encoding: 'utf8' });
+    content = readFileSync( join(tacsConfig.dir.template, file), { encoding: 'utf8' } );
     templateMap.set(file, content);
 
   }
@@ -90,7 +90,7 @@ export function templateParse(template = '', data) {
   // include file content
   function include(file) {
 
-    const content = templateGet( join(tacsConfig.dir.template, file) );
+    const content = templateGet(file);
     return content ? parser(content) : '';
 
   }
@@ -120,7 +120,7 @@ export function templateEngine(file, data, callback) {
   tacsConfig.dir.template = dirname(file);
 
   // render template
-  const render = templateParse( templateGet(file), data );
+  const render = templateParse( templateGet( basename(file) ), data );
 
   // revert template directory
   tacsConfig.dir.template = cfgDirTemplate;

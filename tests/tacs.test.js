@@ -10,11 +10,11 @@ describe('jsTACS templateGet', () => {
 
   [
     {
-      file: './tests/template/name.html',
+      file: 'name.html',
       content: '<p>first name: ${ data.nameFirst }</p><p>last name: ${ data.nameLast }</p>\n'
     },
     {
-      file: './tests/template/index.html',
+      file: 'index.html',
       content: '${ include(\'header.html\') }\n<p>${ data.content }</p>\n'
     },
   ].forEach((set, idx) => {
@@ -112,7 +112,7 @@ test('jsTACS Express.js templateEngine test string replacement', (t, done) => {
     }
   }
 
-  templateEngine('./tests/template/name.html', { nameFirst: 'Craig', nameLast: 'Buckler' }, callback);
+  templateEngine('name.html', { nameFirst: 'Craig', nameLast: 'Buckler' }, callback);
 
 });
 
@@ -129,6 +129,6 @@ test('jsTACS Express.js templateEngine test template include', (t, done) => {
     }
   }
 
-  templateEngine('./tests/template/index.html', { title: 'Main title', content: 'Some text' }, callback);
+  templateEngine('index.html', { title: 'Main title', content: 'Some text' }, callback);
 
 });
